@@ -67,5 +67,8 @@ for redirect in redirects:
         #print(f"header: {headers}")
         #print(json.dumps(data))
         # Make the POST request
-        response = requests.post(url, headers=headers, data=json.dumps(data))
-        print("Response JSON:", response.json())
+        try:
+            response = requests.post(url, headers=headers, data=json.dumps(data), timeout=20)
+            print("Response JSON:", response.json())
+        except requests.exceptions.Timeout:
+            print("Request time out")
