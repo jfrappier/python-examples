@@ -1,5 +1,4 @@
 # Query Datadog API for count of hits on URL based on redirect file/JSON
-
 import shutil
 import json
 import requests
@@ -15,7 +14,7 @@ back_then = (right_now - 2592000000)
 # traffic from the old URL
 
 # Requires environment variable to be set to these keys
-# Todo - get from secrets service
+# Todo - get from HVS? Would still require HCP service principal keys to be set
 DD_API_KEY = os.getenv('DD_API_KEY')
 DD_APP_KEY = os.getenv('DD_APP_KEY')
 
@@ -29,10 +28,14 @@ headers = {
     "DD-APPLICATION-KEY": DD_APP_KEY
 }
 
+# Initialize a session
+session = requests.Session()
+session.headers.update(headers)
+
 # Get copy of current redirect and build data
-# Update your source/destination. Could probably get right from repo
+# Update your source/destination. Could probably get right from tutorials repo
 # in raw format
-shutil.copyfile('/redirects.json', '/temp/redirects.json')
+shutil.copyfile('/source/path/redirects.json', '/destination/path/redirects.json')
 
 file = open('redirects.json')
 redirects = json.load(file)
@@ -68,7 +71,13 @@ for redirect in redirects:
         #print(json.dumps(data))
         # Make the POST request
         try:
-            response = requests.post(url, headers=headers, data=json.dumps(data), timeout=20)
+            response = session.post(url, json=data, timeout=30)
+            response.raise_for_status()  # Raise an exception for HTTP errors
             print("Response JSON:", response.json())
         except requests.exceptions.Timeout:
-            print("Request time out")
+            print("Request timed out")
+        except requests.exceptions.RequestException as e:
+            print(f"Request failed: {e}")
+
+# Close the session
+session.close()
