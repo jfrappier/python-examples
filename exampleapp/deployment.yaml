@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test
+  template:
+    metadata:
+      labels:
+        app: test
+    spec:
+      containers:
+      - name: test
+        image: jfrappier/test:latest
+        ports:
+        - containerPort: 5000
+        env:
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: vso-static-creds-from-vault
+              key: username
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: vso-static-creds-from-vault
+              key: password
+        - name: DB_HOST
+          value: "your_db_host"
+        - name: DB_PORT
+          value: "5432"
+        - name: DB_NAME
+          value: "your_db_name"
