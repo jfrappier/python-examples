@@ -14,7 +14,6 @@ back_then = (right_now - 2592000000)
 # traffic from the old URL
 
 # Requires environment variable to be set to these keys
-# Todo - get from HVS? Would still require HCP service principal keys to be set
 DD_API_KEY = os.getenv('DD_API_KEY')
 DD_APP_KEY = os.getenv('DD_APP_KEY')
 
