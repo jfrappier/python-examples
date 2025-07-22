@@ -32,7 +32,7 @@ session = requests.Session()
 session.headers.update(headers)
 
 # Get copy of current redirect and build data
-# Update your source/destination. Could probably get right from tutorials repo
+# Update your source/destination. Could probably get right from the repo
 # in raw format
 shutil.copyfile('/source/path/redirects.json', '/destination/path/redirects.json')
 
